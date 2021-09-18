@@ -87,8 +87,8 @@ class SimGraph:
     
     def Mat_Radiation(self):
         self.adj_type = nx.adjacency_matrix(self.graph, dtype='float32',weight='edge_type').todense()
-        self.adj_cond = np.multiply(self.adj_mat, self.adj_type == 1)
-        return self.adj_type
+        self.adj_rad = np.multiply(self.adj_mat, self.adj_type == 1)
+        return self.adj_rad
      
        
     def Mat_Conduction(self):
@@ -130,10 +130,10 @@ class SimGraph:
 
         C_m1 = np.reshape(np.power(self.Capa_vect,-1), (self.n_lumps,1))
         # Getting the real matrix by incorporating the thermal capacitances
-        self.mat_t = (C_m1@O1.T)*mat_t
+        mat_t = (C_m1@O1.T)*mat_t
         # Getting the eigenvalues
-        self.eig_R = np.linalg.eigvals(mat_t)
-        return self.eig_R
+        eig_R = np.linalg.eigvals(mat_t)
+        return eig_R, mat_t
         # mat_t is used after for the computation of the thermal evolution
         
         
@@ -149,8 +149,8 @@ class SimGraph:
         self.MatAdj_type()
         self.Mat_Conduction()
         self.defineCapacitance()
-        self.eigenSimplify(self.adj_cond)
-    
+        self.eig_Cond, self.mat_Cond = self.eigenSimplify(self.adj_cond)
+        self.eig_Rad, self.mat_Rad = self.eigenSimplify(self.adj_rad)
         
     def thermalConductionDirect(self, T, time):
         
@@ -171,9 +171,14 @@ class SimGraph:
         dT = np.multiply(np.power(self.Capa_vect,-1),(Q_cond_vect))
         return dT
     
+    def thermalRadiationLin(self, T, time):
+        # Using the simplified matrix to compute the thermal evolution caused by radiation
+        dT = self.mat_Rad @ np.power(T, 4)
+        return dT
     
     def thermalConductionLin(self, T, time):
         # Using the simplified matrix to compute the thermal evolution caused by diffusion
-        
-        dT = self.mat_t @ T
+        dT = self.mat_Cond @ T
         return dT
+    
+    
