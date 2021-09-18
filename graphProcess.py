@@ -121,7 +121,7 @@ class SimGraph:
         # Multiply each basis matrix of the res matrix by the resistance matrix
         r_mat = np.zeros((n_tot,n_tot,n_tot))
         for i in range(n_tot):
-            r_mat[i,:,:] = np.multiply( np.squeeze(res[i,:,:]), self.adj_mat)
+            r_mat[i,:,:] = np.multiply( np.squeeze(res[i,:,:]), mat_problem)
 
         # Summing the matrices on the 3rd dimension
         mat_t = np.zeros(n_tot)
