@@ -17,9 +17,12 @@ To test the simulation simply launch the graph_sim_simple.py script, simulating 
 
 ## To be done 
 
+- CubeSat graphs
 - Heat source/sink
 - Convection
 - GUI for graph management
+- Orbit definition and Sun radiation
+- Albedo
 - Use of sparse matrices ?
 
 ## Finally
