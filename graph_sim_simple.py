@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator
 
+import graphSimple as gs
 import graphProcess as gp
 
 
