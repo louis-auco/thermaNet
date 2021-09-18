@@ -8,9 +8,7 @@ Created on Fri Sep 17 13:00:08 2021
 
 import numpy as np
 import scipy as sp
-import graphSimple as gs
 import networkx as nx
-import thermal as th
 import scipy.integrate as spode
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -31,7 +29,7 @@ R_beam = L_beam/(k_Al*A_beam)
 C_beam = cp_Al*M_beam
 
 
-###################"
+################ Using a classical thermal evolution scheme
 
 
 # n_lumps = 10
@@ -76,7 +74,7 @@ C_beam = cp_Al*M_beam
 # plt.show()
 
 
-###############
+############### Using the pre-computed matrix 
 
 
 n_lumps = 10
@@ -98,18 +96,15 @@ x = np.linspace(0, 1, n_lumps)
 T_max = 500
 T_min = 300
 T0 = T_min + (T_min-T_max)*4*x*(x-1)
-t = np.linspace(0, 100, 100)
 
-test_evo = simG.thermalConductionLin(T0, t)
-r=np.multiply(test_evo,simG.adj_mat)
+lt = np.linspace(0, 100, 100)
 
-
-sol = spode.odeint(thermal_ode, T0, t)
+sol = spode.odeint(thermal_ode, T0, lt)
 
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-X, Y = np.meshgrid(np.arange(n_lumps), t)
+X, Y = np.meshgrid(np.arange(n_lumps), lt)
 Z = sol
 
 ax.plot_surface(X, Y, Z,cmap=cm.coolwarm, linewidth=0, antialiased=False)
